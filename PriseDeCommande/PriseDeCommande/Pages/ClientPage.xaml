@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PriseDeCommande.Pages.ClientPage">
+
+
+    <ContentPage.Content>
+        <StackLayout>
+            <SearchBar x:Name="SearchBarClients" Placeholder="Search by client name..."
+           TextChanged="OnSearchTextChanged" />
+
+
+            <ListView x:Name="ClientsListView"
+                        ItemsSource="{Binding FilteredClients}"
+                        ItemSelected="OnClientSelected" 
+                        VerticalOptions="FillAndExpand"
+                        HasUnevenRows="True">
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding ClientName}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Add Client" Clicked="OnAddClientClicked" />
+    </ContentPage.ToolbarItems>
+
+</ContentPage>

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PriseDeCommande.Pages.ClientDetailsPage">
+
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="{Binding ClientName}" FontSize="24" HorizontalOptions="CenterAndExpand" />
+
+            <!-- Add more labels or controls to display other client details here -->
+
+            <!-- Button to create a new command for this client -->
+            <Button Text="Create New Command" Clicked="OnCreateCommandClicked" HorizontalOptions="CenterAndExpand" />
+
+        </StackLayout>
+    </ContentPage.Content>
+
+</ContentPage>

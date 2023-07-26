@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PriseDeCommande.Pages.CommandPage">
+
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <Picker x:Name="categoryPicker" Title="Select a Category" SelectedIndexChanged="OnCategoryPickerSelectedIndexChanged" />
+            <Picker x:Name="productPicker" Title="Select a Product" />
+            <Entry x:Name="quantityEntry" Placeholder="Quantity" Keyboard="Numeric" />
+            <Entry x:Name="priceEntry" Placeholder="Price" Keyboard="Numeric" />
+
+            <Button Text="Submit Command" Clicked="OnSubmitCommandClicked" />
+            <Button Text="Back" Clicked="OnBackButtonClicked" />
+        </StackLayout>
+    </ContentPage.Content>
+
+</ContentPage>
