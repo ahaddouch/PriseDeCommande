@@ -11,7 +11,7 @@ namespace PriseDeCommande.Pages
     {
         private readonly DAL dal = new DAL();
         private readonly int clientId;
-        private List<Category> categories;
+        //private List<Category> categories;
         private List<Product> selectedProducts;
 
         public CommandPage(int clientId)
@@ -19,7 +19,7 @@ namespace PriseDeCommande.Pages
             InitializeComponent();
             this.clientId = clientId;
             //categories = dal.GetCategories(); // Fetch all the categories from the database
-            categoryPicker.ItemsSource = categories;
+            //categoryPicker.ItemsSource = categories;
         }
 
         private void OnCategoryPickerSelectedIndexChanged(object sender, EventArgs e)

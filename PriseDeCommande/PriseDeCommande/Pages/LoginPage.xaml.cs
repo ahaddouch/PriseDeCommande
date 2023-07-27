@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -46,7 +47,12 @@ namespace PriseDeCommande.Pages
             if (isAuthenticated)
             {
                 //  Application.Current.MainPage = new ClientPage(username);
-                await Navigation.PushAsync(new ClientPage(username));
+                //await Navigation.PushAsync(new ClientPage());
+                //Application.Current.MainPage = new MainPage();
+                SecureStorage.SetAsync("Username", username);
+                SecureStorage.SetAsync("Password", password);
+                (App.Current as App)?.OnLoginSuccessful();
+                //App.Current.OnLoginSuccessful();
             }
             else
             {

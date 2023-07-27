@@ -9,10 +9,10 @@
             <Label Text="Login:"
                    FontSize="20"
                    WidthRequest="95"
-                   HorizontalTextAlignment="End"
+                   HorizontalTextAlignment="Start"
                    TextColor="#000"
                    VerticalOptions="Center"/>
-            <Entry Placeholder="Email"
+            <Entry Placeholder="Login"
                    FontSize="18"
                    WidthRequest="200"
                    VerticalOptions="Center"
@@ -20,7 +20,7 @@
         </StackLayout>
         <StackLayout Orientation="Horizontal">
             <Label Text="Password:"
-                   HorizontalTextAlignment="End"
+                   HorizontalTextAlignment="Start"
                    FontSize="20"
                    TextColor="#000"
                    VerticalOptions="Center"/>

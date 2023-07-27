@@ -4,6 +4,7 @@ using PriseDeCommande.Class;
 using PriseDeCommande.Pages;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -37,7 +38,7 @@ namespace PriseDeCommande
                 {
                     
                     connection.Open();
-                    string query = "SELECT IDCompte FROM compte WHERE sous_nom = @username AND password = @password AND actif = 1 AND type_compte='RC'";
+                    string query = "SELECT IDCompte FROM compte WHERE raison_sociale = @username AND password = @password AND actif = 1 AND type_compte='RC'";
                     //string query = "SELECT COUNT(*) FROM user WHERE username = @username AND password = @password";
                     MySqlCommand command = new MySqlCommand(query, connection);
                     command.Parameters.AddWithValue("@Username", username);
@@ -74,7 +75,10 @@ namespace PriseDeCommande
         }
 
 
-        public List<Clients> GetClientsForRComercial(String rc)
+       
+
+
+        public List<Clients> GetClientsForRComercial()
         {
             List<Clients> clients = new List<Clients>();
 
@@ -84,22 +88,22 @@ namespace PriseDeCommande
                 {
                     connection.Open();
 
-                    string query = "SELECT IDCompte,sous_nom,adresse,ville,  FROM Compte WHERE Registre_com = @Rcomercial and type_compte= 'CL' and actif=1 ";
-
+                    string query = "SELECT IDCompte,raison_sociale,adresse,ville,tel_fixe FROM Compte WHERE Registre_com = @Rcomercial AND type_compte = 'CL' AND actif = 1";
 
                     using (var command = new MySqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@Rcomercial", rc);
+                        command.Parameters.AddWithValue("@Rcomercial", LoginPage.IdCom);
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
                                 Clients client = new Clients
                                 {
-                                    ClientId = reader.GetInt32("IDCompte"),
-                                    ClientName = reader.GetString("sous_nom"),
-                                    ClientAdresse=reader.GetString("adresse"),
-                                    ClientVille = reader.GetString("ville"),
+                                    IDCompte = reader.GetInt32("IDCompte"),
+                                    RaisonSociale = reader.GetString("raison_sociale"),
+                                    Adresse = reader.GetString("adresse"),
+                                    Ville = reader.GetString("ville"),
+                                    TelFixe = reader.GetString("tel_fixe"),
                                 };
                                 clients.Add(client);
                             }
@@ -126,8 +130,7 @@ namespace PriseDeCommande
             return clients;
         }
 
-
-        public bool InsertClient(string numero, string raison_sociale,  string tel_fixe, string adresse, string ville)
+        public bool InsertClientData(string numero, string raison_sociale, string tel_fixe, string adresse, string abr_rc_nom, string ice, int IDCategorie_client, double ht_ttc, string ville, string secteur, int id_delai_paiement)
         {
             try
             {
@@ -135,43 +138,164 @@ namespace PriseDeCommande
                 {
                     connection.Open();
 
-                    string query = "INSERT INTO Compte (numero,raison_sociale,Registre_com,tel_fixe,adresse,type_compte,ville, actif) VALUES (@numero,@raison_sociale,@Registre_com,@tel_fixe,@adresse,'CL',@ville,1)";
+                    string query = "INSERT INTO Compte (numero, actif, raison_sociale, tel_fixe, adresse, type_compte, abr_rc_nom, ice, IDCategorie_client, ht_ttc, ville, secteur, id_delai_paiement, NouveauClient, D_C,Registre_com) VALUES (@numero, @actif, @raison_sociale, @tel_fixe, @adresse, @type_compte, @abr_rc_nom, @ice, @IDCategorie_client, @ht_ttc, @ville, @secteur, @id_delai_paiement, @NouveauClient, @D_C,@Registre_com)";
 
                     using (var command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@numero", numero);
+                        command.Parameters.AddWithValue("@actif", 1);
                         command.Parameters.AddWithValue("@raison_sociale", raison_sociale);
-                        command.Parameters.AddWithValue("@Registre_com", LoginPage.IdCom);
                         command.Parameters.AddWithValue("@tel_fixe", tel_fixe);
                         command.Parameters.AddWithValue("@adresse", adresse);
+                        command.Parameters.AddWithValue("@type_compte", "CL");
+                        command.Parameters.AddWithValue("@abr_rc_nom", abr_rc_nom);
+                        command.Parameters.AddWithValue("@ice", ice);
+                        command.Parameters.AddWithValue("@IDCategorie_client", IDCategorie_client);
+                        command.Parameters.AddWithValue("@ht_ttc", ht_ttc);
                         command.Parameters.AddWithValue("@ville", ville);
+                        command.Parameters.AddWithValue("@secteur", secteur);
+                        command.Parameters.AddWithValue("@id_delai_paiement", id_delai_paiement);
+                        command.Parameters.AddWithValue("@NouveauClient", 1);
+                        command.Parameters.AddWithValue("@D_C", "d");
+                        command.Parameters.AddWithValue("@Registre_com", LoginPage.IdCom);
 
+                        int rowsAffected = command.ExecuteNonQuery();
 
-                        int rowsAffected =  command.ExecuteNonQuery();
-                        connection.Close();
-                        return rowsAffected > 0;
+                        if (rowsAffected > 0)
+                        {
+                            // Client data inserted successfully
+                            Debug.WriteLine("Client inserted successfully");
+                            return true;
+                        }
+                        else
+                        {
+                            // No rows affected, failed to insert client data
+                            Debug.WriteLine("Failed to insert client data");
+                            return false;
+                        }
                     }
-
                 }
             }
             catch (MySqlException ex)
             {
+                // Handle MySQL exceptions
                 Device.BeginInvokeOnMainThread(async () =>
                 {
                     await Application.Current.MainPage.DisplayAlert("MySQL Error", ex.Message, "OK");
                 });
+                Debug.WriteLine("MySQL Error: " + ex.Message);
+                return false;
             }
             catch (Exception ex)
             {
+                // Handle other exceptions
                 Device.BeginInvokeOnMainThread(async () =>
                 {
                     await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
                 });
+                Debug.WriteLine("Error: " + ex.Message);
+                return false;
             }
-
-            return false;
         }
 
+
+        public List<DelaiPaiement> GetDelaiPaiements()
+{
+    List<DelaiPaiement> delaiPaiements = new List<DelaiPaiement>();
+
+    try
+    {
+        using (var connection = new MySqlConnection(connect()))
+        {
+            connection.Open();
+
+            string query = "SELECT id_delai_paiement, libelle FROM delai_paiement";
+
+            using (var command = new MySqlCommand(query, connection))
+            {
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        DelaiPaiement delaiPaiement = new DelaiPaiement
+                        {
+                            IDDelaiPaiement = reader.GetInt32("id_delai_paiement"),
+                            Libelle = reader.GetString("libelle")
+                        };
+                        delaiPaiements.Add(delaiPaiement);
+                    }
+                }
+            }
+
+            connection.Close();
+        }
+    }
+    catch (MySqlException ex)
+    {
+        Device.BeginInvokeOnMainThread(async () =>
+        {
+            await Application.Current.MainPage.DisplayAlert("MySQL Error", ex.Message, "OK");
+        });
+    }
+    catch (Exception ex)
+    {
+        Device.BeginInvokeOnMainThread(async () =>
+        {
+            await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+        });
+    }
+
+    return delaiPaiements;
+}
+
+public List<CategorieClient> GetCategorieClients()
+{
+    List<CategorieClient> categories = new List<CategorieClient>();
+
+    try
+    {
+        using (var connection = new MySqlConnection(connect()))
+        {
+            connection.Open();
+
+            string query = "SELECT IDCategorie_client, Libelle FROM categorie_client";
+
+            using (var command = new MySqlCommand(query, connection))
+            {
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        CategorieClient category = new CategorieClient
+                        {
+                            IDCategorie_client = reader.GetInt32("IDCategorie_client"),
+                            Libelle = reader.GetString("Libelle")
+                        };
+                        categories.Add(category);
+                    }
+                }
+            }
+
+            connection.Close();
+        }
+    }
+    catch (MySqlException ex)
+    {
+        Device.BeginInvokeOnMainThread(async () =>
+        {
+            await Application.Current.MainPage.DisplayAlert("MySQL Error", ex.Message, "OK");
+        });
+    }
+    catch (Exception ex)
+    {
+        Device.BeginInvokeOnMainThread(async () =>
+        {
+            await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+        });
+    }
+
+    return categories;
+}
 
         //public List<Category> GetCategories()
         //{

@@ -1,18 +1,37 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+﻿<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PriseDeCommande.Pages.ClientDetailsPage">
 
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="{Binding ClientName}" FontSize="24" HorizontalOptions="CenterAndExpand" />
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-            <!-- Add more labels or controls to display other client details here -->
+            <Label Text="Raison Sociale:" Grid.Row="0" Grid.Column="0" FontSize="Title" HorizontalOptions="Start" VerticalOptions="Center" />
+            <Label Text="{Binding RaisonSociale}" Grid.Row="0" Grid.Column="1" FontSize="Subtitle" HorizontalOptions="Start" VerticalOptions="Center" />
 
-            <!-- Button to create a new command for this client -->
-            <Button Text="Create New Command" Clicked="OnCreateCommandClicked" HorizontalOptions="CenterAndExpand" />
+            <Label Text="Adresse:" Grid.Row="1" Grid.Column="0" FontSize="Title" HorizontalOptions="Start" VerticalOptions="Center" />
+            <Label Text="{Binding Adresse}" Grid.Row="1" Grid.Column="1" FontSize="Subtitle" HorizontalOptions="Start" VerticalOptions="Center" />
 
-        </StackLayout>
+            <Label Text="Ville:" Grid.Row="2" Grid.Column="0" FontSize="Title" HorizontalOptions="Start" VerticalOptions="Center" />
+            <Label Text="{Binding Ville}" Grid.Row="2" Grid.Column="1" FontSize="Subtitle" HorizontalOptions="Start" VerticalOptions="Center" />
+
+            <Label Text="Tél Fixe:" Grid.Row="3" Grid.Column="0" FontSize="Title" HorizontalOptions="Start" VerticalOptions="Center" />
+            <Label Text="{Binding TelFixe}" Grid.Row="3" Grid.Column="1" FontSize="Subtitle" HorizontalOptions="Start" VerticalOptions="Center" />
+
+            <Button Text="Create New Command" Grid.Row="4" Clicked="OnCreateCommandClicked" HorizontalOptions="Center" VerticalOptions="Center" />
+
+        </Grid>
+        
+        
+            
     </ContentPage.Content>
 
 </ContentPage>

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MySqlX.XDevAPI;
 using PriseDeCommande.Class;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -17,27 +19,26 @@ namespace PriseDeCommande.Pages
         public List<Clients> Clients { get; set; }
 
 
-        private readonly string nomrc;
-        public ClientPage(String nomrc)
+        public ClientPage()
         {
             InitializeComponent();
             BindingContext = this;
-            this.nomrc = nomrc;
         }
 
 
-        protected override  void OnAppearing()
+        protected async override  void OnAppearing()
         {
             base.OnAppearing();
+           
 
 
-             RefreshClients();
+            RefreshClients();
             FilteredClients = Clients;
         }
 
         private  void RefreshClients()
         {
-            Clients =  dal.GetClientsForRComercial(nomrc);
+            Clients =  dal.GetClientsForRComercial();
 
             ClientsListView.ItemsSource = null;
             ClientsListView.ItemsSource = Clients;
@@ -68,7 +69,7 @@ namespace PriseDeCommande.Pages
             }
             else
             {
-                FilteredClients = Clients.Where(c => c.ClientName.ToLower().Contains(searchText.ToLower())).ToList();
+                FilteredClients = Clients.Where(c => c.RaisonSociale.ToLower().Contains(searchText.ToLower())).ToList();
             }
 
             ClientsListView.ItemsSource = FilteredClients; // Update the ListView with filtered data
@@ -94,6 +95,7 @@ namespace PriseDeCommande.Pages
                 await DisplayAlert("Error", ex.Message, "OK");
             }
         }
+       
 
 
 

@@ -1,33 +1,46 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+﻿<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PriseDeCommande.Pages.ClientPage">
 
-
     <ContentPage.Content>
-        <StackLayout>
-            <SearchBar x:Name="SearchBarClients" Placeholder="Search by client name..."
-           TextChanged="OnSearchTextChanged" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
+            <SearchBar x:Name="SearchBarClients" Placeholder="Search by client name..."
+                       TextChanged="OnSearchTextChanged" />
 
             <ListView x:Name="ClientsListView"
-                        ItemsSource="{Binding FilteredClients}"
-                        ItemSelected="OnClientSelected" 
-                        VerticalOptions="FillAndExpand"
-                        HasUnevenRows="True">
+                      Grid.Row="1"
+                      ItemsSource="{Binding FilteredClients}"
+                      ItemSelected="OnClientSelected"
+                      VerticalOptions="FillAndExpand"
+                      HasUnevenRows="True">
 
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell Text="{Binding ClientName}" />
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" Padding="10,5">
+                                <Label Text="{Binding RaisonSociale}" Margin="8" TextColor="Black" FontSize="26" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" />
+                                <!-- Add other labels here -->
+                            </StackLayout>
+                        </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
 
             </ListView>
-        </StackLayout>
+
+            <Button Text="Add Client" Clicked="OnAddClientClicked"
+                    Grid.Row="2"
+                    BackgroundColor="#0064FA"
+                    TextColor="White"
+                    BorderWidth="1"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="End" />
+
+        </Grid>
     </ContentPage.Content>
-
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Add Client" Clicked="OnAddClientClicked" />
-    </ContentPage.ToolbarItems>
-
 </ContentPage>

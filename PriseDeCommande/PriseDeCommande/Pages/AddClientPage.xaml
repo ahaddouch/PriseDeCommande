@@ -2,11 +2,84 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PriseDeCommande.AddClientPage">
+    
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+            <Label Text="Add New Client" FontSize="Title" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Grid.Row="0" />
+
+            <ScrollView Grid.Row="1">
+                <Grid Padding="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Label Text="Numero *" Grid.Row="0" Grid.Column="0" VerticalOptions="Center" TextColor="Red" />
+                    <Entry x:Name="NumeroEntry" Placeholder="Numero" Grid.Row="0" Grid.Column="1" />
+
+                    <Label Text="Raison Sociale *" Grid.Row="1" Grid.Column="0" VerticalOptions="Center" TextColor="Red" />
+                    <Entry x:Name="RaisonSocialeEntry" Placeholder="Raison Sociale" Grid.Row="1" Grid.Column="1" />
+
+                    <Label Text="Tel" Grid.Row="2" Grid.Column="0" VerticalOptions="Center" />
+                    <Entry x:Name="TelFixeEntry" Placeholder="Tel" Grid.Row="2" Grid.Column="1" Keyboard="Telephone"/>
+
+                    <Label Text="Adresse" Grid.Row="3" Grid.Column="0" VerticalOptions="Center" />
+                    <Entry x:Name="AdresseEntry" Placeholder="Adresse" Grid.Row="3" Grid.Column="1" />
+
+                    <Label Text="Abr " Grid.Row="4" Grid.Column="0" VerticalOptions="Center" />
+                    <Entry x:Name="AbrRcNomEntry" Placeholder="Abr" Grid.Row="4" Grid.Column="1" />
+
+                    <Label Text="ICE *" Grid.Row="5" Grid.Column="0" VerticalOptions="Center" />
+                    <Entry x:Name="ICEEntry" Placeholder="ICE" Grid.Row="5" Grid.Column="1" />
+
+                    <Label Text="HT" Grid.Row="6" Grid.Column="0" VerticalOptions="Center" />
+                    <Entry x:Name="HT_TTCEntry" Placeholder="HT" Grid.Row="6" Grid.Column="1" Keyboard="Numeric"/>
+
+                    <Label Text="Ville*" Grid.Row="7" Grid.Column="0" VerticalOptions="Center" TextColor="Red"/>
+                    <Entry x:Name="VilleEntry" Placeholder="Ville" Grid.Row="7" Grid.Column="1" />
+
+                    <Label Text="Secteur *" Grid.Row="8" Grid.Column="0" VerticalOptions="Center" TextColor="Red"/>
+                    <Entry x:Name="SecteurEntry" Placeholder="Secteur" Grid.Row="8" Grid.Column="1" />
+
+                    <Label Text="Delai Paiement" Grid.Row="9" Grid.Column="0" VerticalOptions="Center" TextColor="Red" />
+                    <Picker x:Name="DelaiPaiementPicker" Grid.Row="9" Grid.Column="1"
+                        Title="Delai Paiement"
+                        ItemsSource="{Binding DelaiPaiements}"
+                        SelectedItem="{Binding SelectedDelaiPaiement}"
+                        ItemDisplayBinding="{Binding Libelle}"
+                            />
+
+                    <Label Text="Categorie *" Grid.Row="10" Grid.Column="0" VerticalOptions="Center" TextColor="Red"/>
+                    <Picker x:Name="CategorieClientPicker" Grid.Row="10" Grid.Column="1"
+                        Title="Categorie "
+                        ItemsSource="{Binding Categories}"
+                        SelectedItem="{Binding SelectedCategorieClient}"
+                        ItemDisplayBinding="{Binding Libelle}" />
+
+                    <StackLayout Orientation="Horizontal" Grid.Row="13" Grid.ColumnSpan="2" HorizontalOptions="Center">
+                        <Button Text="Add Client" Clicked="OnAddClientClicked" />
+                        <Button Text="Cancel" Clicked="OnCancelClicked" />
+                    </StackLayout>
+                </Grid>
+            </ScrollView>
+            </Grid>
     </ContentPage.Content>
+
 </ContentPage>
