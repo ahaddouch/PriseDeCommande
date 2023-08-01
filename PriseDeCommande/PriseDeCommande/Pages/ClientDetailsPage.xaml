@@ -4,29 +4,31 @@
 
     <ContentPage.Content>
         
-        <Grid>
+        <Grid Margin="20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                
+                
+            </Grid.RowDefinitions >
 
-            <Label Text="Raison Sociale:" Grid.Row="0" Grid.Column="0" FontSize="Title" HorizontalOptions="Start" VerticalOptions="Center" />
-            <Label Text="{Binding RaisonSociale}" Grid.Row="0" Grid.Column="1" FontSize="Subtitle" HorizontalOptions="Start" VerticalOptions="Center" />
+            <Label Text="Raison Sociale:"  Grid.Row="0" Grid.Column="0" FontSize="Title" HorizontalOptions="Start" VerticalOptions="Center" />
+            <Label Text="{Binding RaisonSociale}" Grid.Row="0" Grid.Column="2" FontSize="Subtitle" HorizontalOptions="Start" VerticalOptions="Center" />
 
             <Label Text="Adresse:" Grid.Row="1" Grid.Column="0" FontSize="Title" HorizontalOptions="Start" VerticalOptions="Center" />
-            <Label Text="{Binding Adresse}" Grid.Row="1" Grid.Column="1" FontSize="Subtitle" HorizontalOptions="Start" VerticalOptions="Center" />
+            <Label Text="{Binding Adresse}" Grid.Row="1" Grid.Column="2" FontSize="Subtitle" HorizontalOptions="Start" VerticalOptions="Center" />
 
             <Label Text="Ville:" Grid.Row="2" Grid.Column="0" FontSize="Title" HorizontalOptions="Start" VerticalOptions="Center" />
-            <Label Text="{Binding Ville}" Grid.Row="2" Grid.Column="1" FontSize="Subtitle" HorizontalOptions="Start" VerticalOptions="Center" />
+            <Label Text="{Binding Ville}" Grid.Row="2" Grid.Column="2" FontSize="Subtitle" HorizontalOptions="Start" VerticalOptions="Center" />
 
             <Label Text="Tél Fixe:" Grid.Row="3" Grid.Column="0" FontSize="Title" HorizontalOptions="Start" VerticalOptions="Center" />
-            <Label Text="{Binding TelFixe}" Grid.Row="3" Grid.Column="1" FontSize="Subtitle" HorizontalOptions="Start" VerticalOptions="Center" />
+            <Label Text="{Binding TelFixe}" Grid.Row="3" Grid.Column="2" FontSize="Subtitle" HorizontalOptions="Start" VerticalOptions="Center" />
 
-            <Button Text="Create New Command" Grid.Row="4" Clicked="OnCreateCommandClicked" HorizontalOptions="Center" VerticalOptions="Center" />
+            <Button Text="Create New Command" Grid.Row="4" Grid.Column="1"  Clicked="OnCreateCommandClicked" HorizontalOptions="Center" VerticalOptions="Center" />
 
         </Grid>
         

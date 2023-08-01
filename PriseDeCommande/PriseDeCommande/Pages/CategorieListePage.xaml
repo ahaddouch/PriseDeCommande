@@ -1,0 +1,56 @@
+﻿<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PriseDeCommande.Pages.CategorieListePage"
+             xmlns:converters="clr-namespace:PriseDeCommande.Converters">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:ByteArrayToImageConverter x:Key="ByteArrayToImageConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- SearchBar at the top -->
+            <RowDefinition Height="Auto" />
+            <!-- CollectionView filling the remaining space -->
+            <RowDefinition Height="*" />
+            <!-- Buttons -->
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- SearchBar -->
+        <SearchBar x:Name="SearchBarClients" Grid.Row="0" Placeholder="Search by client name..."
+                   TextChanged="OnSearchTextChanged" />
+
+        <!-- CollectionView -->
+        <CollectionView x:Name="categoriesCollection"
+                        Grid.Row="1"
+                        ItemsLayout="VerticalGrid, 3"
+                        SelectionMode="Single"
+                        SelectedItem="{Binding SelectedCategory}"
+                        SelectionChanged="OnCategorySelected">
+            <CollectionView.ItemTemplate >
+                <DataTemplate>
+                    <Grid Padding="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Image Source="{Binding ImageDataCategorie, Converter={StaticResource ByteArrayToImageConverter}}" HeightRequest="100" WidthRequest="100" Aspect="AspectFill" />
+
+                        <Label Text="{Binding NameCategorie}" Grid.Row="1" HorizontalTextAlignment="Center" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- StackLayout for Buttons and Counter -->
+        <StackLayout Grid.Row="2" Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Spacing="30">
+            <Label Text="{Binding SelectedProducts.Count, StringFormat='Selected Products: {0}'}"  FontSize="16" TextColor="Red" VerticalOptions="Center"/>
+
+            <Button Text="CheckOut" Clicked="OnCheckoutClicked" FontSize="20" HeightRequest="50"  BackgroundColor="ForestGreen"/>
+
+
+        </StackLayout>
+    </Grid>
+</ContentPage>

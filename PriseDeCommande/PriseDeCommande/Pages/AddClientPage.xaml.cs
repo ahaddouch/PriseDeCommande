@@ -47,7 +47,7 @@ namespace PriseDeCommande
             }
         }
 
-        private void OnAddClientClicked(object sender, EventArgs e)
+        private async void OnAddClientClicked(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(NumeroEntry.Text) || string.IsNullOrWhiteSpace(RaisonSocialeEntry.Text) || string.IsNullOrWhiteSpace(TelFixeEntry.Text) || string.IsNullOrWhiteSpace(ICEEntry.Text) ||
         SelectedDelaiPaiement == null || 
@@ -61,7 +61,7 @@ namespace PriseDeCommande
 
             if (clientExists)
             {
-                // Show an error message if the client already exists
+                
                 DisplayAlert("Error", "Client with the same Numero already exists.", "OK");
                 
             }
@@ -85,10 +85,13 @@ namespace PriseDeCommande
                 {
                     
                     DisplayAlert("Success", "Client added successfully!", "OK");
+
+                    await Navigation.PopAsync();
                 }
                 else
                 {
                     DisplayAlert("Error", "Failed to add client. Please try again.", "OK");
+
                 }
             }
         }

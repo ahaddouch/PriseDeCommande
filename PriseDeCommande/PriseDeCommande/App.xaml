@@ -1,8 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<Application xmlns="http://xamarin.com/schemas/2014/forms"
+﻿<Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="PriseDeCommande.App">
+             x:Class="PriseDeCommande.App"
+             xmlns:converters="clr-namespace:PriseDeCommande.Converters">
     <Application.Resources>
-
+        <ResourceDictionary>
+            <converters:ByteArrayToImageConverter x:Key="ByteArrayToImageConverter" />
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

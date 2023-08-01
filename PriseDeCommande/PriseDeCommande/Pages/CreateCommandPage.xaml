@@ -1,18 +1,62 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+﻿<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="PriseDeCommande.Pages.CommandPage">
-
+             x:Class="PriseDeCommande.Pages.CreateCommandPage">
     <ContentPage.Content>
-        <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-            <Picker x:Name="categoryPicker" Title="Select a Category" SelectedIndexChanged="OnCategoryPickerSelectedIndexChanged" />
-            <Picker x:Name="productPicker" Title="Select a Product" />
-            <Entry x:Name="quantityEntry" Placeholder="Quantity" Keyboard="Numeric" />
-            <Entry x:Name="priceEntry" Placeholder="Price" Keyboard="Numeric" />
+        <StackLayout>
+            <!-- Display the selected client information -->
+            <Label Text="Selected Client:" FontSize="Subtitle" />
+            <Label Text="{Binding client.ClientName}" FontSize="Subtitle" />
+            <Label Text="{Binding client.Address}" FontSize="Subtitle" />
 
-            <Button Text="Submit Command" Clicked="OnSubmitCommandClicked" />
-            <Button Text="Back" Clicked="OnBackButtonClicked" />
+            <!-- ListView to display products split by category -->
+            <ListView x:Name="productsListView"
+                      ItemsSource="{Binding productsGroupedByCategory}"
+                      SeparatorVisibility="Default"
+                      HasUnevenRows="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Padding="10">
+                                <!-- Display category name as the header -->
+                                <Label Text="{Binding Key}" FontSize="Title" TextColor="DarkBlue" />
+
+                                <!-- ListView to display products under the category -->
+                                <ListView ItemsSource="{Binding Value}" SeparatorVisibility="None">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <ViewCell>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <!-- Product name -->
+                                                    <Label Text="{Binding ProductName}" Grid.Column="0" />
+
+                                                    <!-- Quantity control -->
+                                                    <Entry Text="{Binding Quantity}" Grid.Column="1" Keyboard="Numeric"
+                                                           HorizontalTextAlignment="Center" />
+
+                                                    <!-- Price control -->
+                                                    <Entry Text="{Binding Price}" Grid.Column="2" Keyboard="Numeric"
+                                                           HorizontalTextAlignment="Center" />
+                                                </Grid>
+                                            </ViewCell>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!-- Add other buttons or controls as needed -->
+
+            <!-- Validate button to save the command -->
+            
         </StackLayout>
     </ContentPage.Content>
-
 </ContentPage>

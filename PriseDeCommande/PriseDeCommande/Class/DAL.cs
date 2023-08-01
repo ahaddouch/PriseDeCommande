@@ -1,11 +1,11 @@
-﻿using MySqlConnector;
-using MySqlX.XDevAPI;
+﻿//using MySql.Data.MySqlClient;
+using MySqlConnector;
 using PriseDeCommande.Class;
+using PriseDeCommande.Converters;
 using PriseDeCommande.Pages;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace PriseDeCommande
@@ -36,7 +36,7 @@ namespace PriseDeCommande
             {
                 try
                 {
-                    
+
                     connection.Open();
                     string query = "SELECT IDCompte FROM compte WHERE raison_sociale = @username AND password = @password AND actif = 1 AND type_compte='RC'";
                     //string query = "SELECT COUNT(*) FROM user WHERE username = @username AND password = @password";
@@ -45,14 +45,14 @@ namespace PriseDeCommande
                     command.Parameters.AddWithValue("@Password", password);
                     using (var reader = command.ExecuteReader())
                     {
-                        if(reader.Read())
+                        if (reader.Read())
                         {
                             isValidUser = true;
-                            LoginPage.IdCom=reader.GetInt32(0);
+                            LoginPage.IdCom = reader.GetInt32(0);
                         }
                     }
 
-                    
+
                     connection.Close();
                 }
                 catch (MySqlException ex)
@@ -75,7 +75,7 @@ namespace PriseDeCommande
         }
 
 
-       
+
 
 
         public List<Clients> GetClientsForRComercial()
@@ -200,199 +200,226 @@ namespace PriseDeCommande
 
 
         public List<DelaiPaiement> GetDelaiPaiements()
-{
-    List<DelaiPaiement> delaiPaiements = new List<DelaiPaiement>();
-
-    try
-    {
-        using (var connection = new MySqlConnection(connect()))
         {
-            connection.Open();
+            List<DelaiPaiement> delaiPaiements = new List<DelaiPaiement>();
 
-            string query = "SELECT id_delai_paiement, libelle FROM delai_paiement";
-
-            using (var command = new MySqlCommand(query, connection))
+            try
             {
-                using (var reader = command.ExecuteReader())
+                using (var connection = new MySqlConnection(connect()))
                 {
-                    while (reader.Read())
+                    connection.Open();
+
+                    string query = "SELECT id_delai_paiement, libelle FROM delai_paiement";
+
+                    using (var command = new MySqlCommand(query, connection))
                     {
-                        DelaiPaiement delaiPaiement = new DelaiPaiement
+                        using (var reader = command.ExecuteReader())
                         {
-                            IDDelaiPaiement = reader.GetInt32("id_delai_paiement"),
-                            Libelle = reader.GetString("libelle")
-                        };
-                        delaiPaiements.Add(delaiPaiement);
+                            while (reader.Read())
+                            {
+                                DelaiPaiement delaiPaiement = new DelaiPaiement
+                                {
+                                    IDDelaiPaiement = reader.GetInt32("id_delai_paiement"),
+                                    Libelle = reader.GetString("libelle")
+                                };
+                                delaiPaiements.Add(delaiPaiement);
+                            }
+                        }
+                    }
+
+                    connection.Close();
+                }
+            }
+            catch (MySqlException ex)
+            {
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    await Application.Current.MainPage.DisplayAlert("MySQL Error", ex.Message, "OK");
+                });
+            }
+            catch (Exception ex)
+            {
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+                });
+            }
+
+            return delaiPaiements;
+        }
+
+        public List<CategorieClient> GetCategorieClients()
+        {
+            List<CategorieClient> categories = new List<CategorieClient>();
+
+            try
+            {
+                using (var connection = new MySqlConnection(connect()))
+                {
+                    connection.Open();
+
+                    string query = "SELECT IDCategorie_client, Libelle FROM categorie_client";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                CategorieClient category = new CategorieClient
+                                {
+                                    IDCategorie_client = reader.GetInt32("IDCategorie_client"),
+                                    Libelle = reader.GetString("Libelle")
+                                };
+                                categories.Add(category);
+                            }
+                        }
+                    }
+
+                    connection.Close();
+                }
+            }
+            catch (MySqlException ex)
+            {
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    await Application.Current.MainPage.DisplayAlert("MySQL Error", ex.Message, "OK");
+                });
+            }
+            catch (Exception ex)
+            {
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+                });
+            }
+
+            return categories;
+        }
+
+
+
+        public bool CheckClientExists(string numero)
+        {
+            using (var connection = new MySqlConnection(connect()))
+            {
+                connection.Open();
+
+                string query = "SELECT COUNT(*) FROM Compte WHERE numero = @numero";
+
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@numero", numero);
+                    int count = (int)command.ExecuteScalar();
+                    return count > 0;
+                }
+            }
+        }
+
+        public List<CategorieArticle> GetCategoriesArticle()
+        {
+            List<CategorieArticle> categories = new List<CategorieArticle>();
+            ByteArrayToImageConverter byteArrayToImageConverter= new ByteArrayToImageConverter();
+
+            try
+            {
+                using (var connection = new MySqlConnection(connect()))
+                {
+                    connection.Open();
+
+                    string query = "SELECT IDFamille_Art, Libelle ,image  FROM famille_art where actif=1";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                CategorieArticle category = new CategorieArticle
+                                {
+                                    IdCategorie = reader.GetInt32(0),
+                                    NameCategorie = reader.GetString(1),
+                                    ImageDataCategorie = reader.GetFieldValue<byte[]>(2)
+                                    
+                                };
+                                categories.Add(category);
+                            }
+                        }
+                    }
+                }
+               
+            }
+            
+            catch (MySqlException ex)
+            {
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    await Application.Current.MainPage.DisplayAlert("MySQL Error", ex.Message, "OK");
+                });
+            }
+            catch (Exception ex)
+            {
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+                });
+            }
+
+            return categories;
+        }
+
+
+
+
+        public List<Product> GetProductsByCategory(int categoryId)
+        {
+            List<Product> products = new List<Product>();
+
+            try
+            {
+                using (var connection = new MySqlConnection(connect()))
+                {
+                    connection.Open();
+
+                    string query = "SELECT IDARTICLE, reference, prix, image FROM article WHERE IDFamille_Art = @categoryId AND actif = 1";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@categoryId", categoryId);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Product product = new Product
+                                {
+                                    ProductId = reader.GetInt32(0),
+                                    ProductName = reader.GetString(1),
+                                    Price = reader.GetFloat(2),
+                                    ImageData = reader.GetFieldValue<byte[]>(3)
+                                };
+                                products.Add(product);
+                            }
+                        }
                     }
                 }
             }
-
-            connection.Close();
-        }
-    }
-    catch (MySqlException ex)
-    {
-        Device.BeginInvokeOnMainThread(async () =>
-        {
-            await Application.Current.MainPage.DisplayAlert("MySQL Error", ex.Message, "OK");
-        });
-    }
-    catch (Exception ex)
-    {
-        Device.BeginInvokeOnMainThread(async () =>
-        {
-            await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
-        });
-    }
-
-    return delaiPaiements;
-}
-
-public List<CategorieClient> GetCategorieClients()
-{
-    List<CategorieClient> categories = new List<CategorieClient>();
-
-    try
-    {
-        using (var connection = new MySqlConnection(connect()))
-        {
-            connection.Open();
-
-            string query = "SELECT IDCategorie_client, Libelle FROM categorie_client";
-
-            using (var command = new MySqlCommand(query, connection))
+            catch (MySqlException ex)
             {
-                using (var reader = command.ExecuteReader())
+                Device.BeginInvokeOnMainThread(async () =>
                 {
-                    while (reader.Read())
-                    {
-                        CategorieClient category = new CategorieClient
-                        {
-                            IDCategorie_client = reader.GetInt32("IDCategorie_client"),
-                            Libelle = reader.GetString("Libelle")
-                        };
-                        categories.Add(category);
-                    }
-                }
+                    await Application.Current.MainPage.DisplayAlert("MySQL Error", ex.Message, "OK");
+                });
+            }
+            catch (Exception ex)
+            {
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+                });
             }
 
-            connection.Close();
+            return products; // Move the return statement outside the while loop
         }
-    }
-    catch (MySqlException ex)
-    {
-        Device.BeginInvokeOnMainThread(async () =>
-        {
-            await Application.Current.MainPage.DisplayAlert("MySQL Error", ex.Message, "OK");
-        });
-    }
-    catch (Exception ex)
-    {
-        Device.BeginInvokeOnMainThread(async () =>
-        {
-            await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
-        });
-    }
 
-    return categories;
-}
-
-        //public List<Category> GetCategories()
-        //{
-        //    List<Category> categories = new List<Category>();
-
-        //    try
-        //    {
-        //        using (var connection = new MySqlConnection(connect()))
-        //        {
-        //            connection.Open();
-
-        //            string query = "SELECT CategoryId, CategoryName FROM categories";
-
-        //            using (var command = new MySqlCommand(query, connection))
-        //            {
-        //                using (var reader = command.ExecuteReader())
-        //                {
-        //                    while (reader.Read())
-        //                    {
-        //                        Category category = new Category
-        //                        {
-        //                            //CategoryId = reader.GetInt32("CategoryId"),
-        //                            //CategoryName = reader.GetString("CategoryName")
-        //                        };
-        //                        categories.Add(category);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (MySqlException ex)
-        //    {
-        //        Device.BeginInvokeOnMainThread(async () =>
-        //        {
-        //            await Application.Current.MainPage.DisplayAlert("MySQL Error", ex.Message, "OK");
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Device.BeginInvokeOnMainThread(async () =>
-        //        {
-        //            await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
-        //        });
-        //    }
-
-        //    return categories;
-        //}
-
-
-        //public List<Product> GetProductsByCategory(int categoryId)
-        //{
-        //    List<Product> products = new List<Product>();
-
-        //    try
-        //    {
-        //        using (var connection = new MySqlConnection(connect()))
-        //        {
-        //            connection.Open();
-
-        //            string query = "SELECT ProductId, ProductName, Price FROM products WHERE CategoryId = @categoryId";
-
-        //            using (var command = new MySqlCommand(query, connection))
-        //            {
-        //                command.Parameters.AddWithValue("@categoryId", categoryId);
-        //                using (var reader = command.ExecuteReader())
-        //                {
-        //                    while (reader.Read())
-        //                    {
-        //                        Product product = new Product
-        //                        {
-        //                            //ProductId = reader.GetInt32("ProductId"),
-        //                            //ProductName = reader.GetString("ProductName"),
-        //                            //Price = reader.GetDecimal("Price")
-        //                        };
-        //                        products.Add(product);
-        //                        return products;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (MySqlException ex)
-        //    {
-        //        Device.BeginInvokeOnMainThread(async () =>
-        //        {
-        //            await Application.Current.MainPage.DisplayAlert("MySQL Error", ex.Message, "OK");
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Device.BeginInvokeOnMainThread(async () =>
-        //        {
-        //            await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
-        //        });
-        //    }
-
-        //    return products;
-        //}
     }
 }

@@ -19,7 +19,7 @@ namespace PriseDeCommande.Pages
         private async void OnCreateCommandClicked(object sender, EventArgs e)
         {
             // Navigate to the page for creating a new command for the selected client
-            await Navigation.PushAsync(new CommandPage(111));
+            await Navigation.PushAsync(new CategorieListePage(selectedClient));
         }
     }
 }
